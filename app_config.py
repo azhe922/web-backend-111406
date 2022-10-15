@@ -18,7 +18,7 @@ class ProductionConfig(Config):
     def init_app(cls, app):
         Config.init_app(app)
 
-class HerokuConfig(ProductionConfig):
+class CloudServiceConfig(ProductionConfig):
 
     @classmethod
     def init_app(cls, app):
@@ -34,7 +34,7 @@ class HerokuConfig(ProductionConfig):
 config = {
     'development': Config,
     'production': ProductionConfig,
-    'heroku': HerokuConfig,
+    'cloud': CloudServiceConfig,
 
     'default': Config
 }
