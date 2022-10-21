@@ -1,7 +1,6 @@
 from app.model.user import User
 from app.utils.password_encryption import encrypt_password, compare_passwords
-import time
-from app.utils.backend_util import dict_to_json, datetime_strf
+from app.utils.backend_util import dict_to_json, datetime_strf, get_now_timestamp
 from app.utils.backend_error import NotFoundEmailException, UserIdOrEmailAlreadyExistedException, NotFoundUseridException, LoginFailedException, PasswordIncorrectException
 from app.enums.user_role import UserRole
 
@@ -14,7 +13,7 @@ def user_signup_service(userdata):
     else:
         userdata['password'] = encrypt_password(
             userdata['password']).decode("utf-8")
-        userdata['create_time'] = int(time.time())
+        userdata['create_time'] = get_now_timestamp()
 
         userdata_json = dict_to_json(userdata)
         user = User.from_json(userdata_json)
@@ -56,7 +55,7 @@ def getuser_by_id_service(user_id):
 
 def update_user_service(user, user_id):
     old_user = User.objects(user_id=user_id)
-    update_time = int(time.time())
+    update_time = get_now_timestamp()
     if old_user:
         old_user = old_user.get(user_id=user_id)
         userdata_json = dict_to_json(user)
@@ -69,7 +68,7 @@ def update_user_service(user, user_id):
 
 def update_user_service_ethsum(user, user_id):
     old_user = User.objects(user_id=user_id)
-    update_time = int(time.time())
+    update_time = get_now_timestamp()
     if old_user:
         old_user = old_user.get(user_id=user_id)
         userdata_json = dict_to_json(user)
@@ -86,7 +85,7 @@ def check_email_existed(email):
 
 
 def update_pwd_service(userdata, query_index):
-    update_time = int(time.time())
+    update_time = get_now_timestamp()
     if "email" in userdata.keys():
         user = User.objects.get(email=query_index)
         user.update_time = update_time
