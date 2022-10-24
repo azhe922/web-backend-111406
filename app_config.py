@@ -1,10 +1,12 @@
 import os
+from datetime import timedelta
 class Config(object):
     DEBUG = True
     DEVELOPMENT = True
     DB_HOST = os.getenv('db_host')
     SECRET_KEY = os.getenv('secret_key')
     JSON_AS_ASCII = False
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=10)
 
     @staticmethod
     def init_app(app):

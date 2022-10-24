@@ -1,4 +1,4 @@
-from flask import request, make_response
+from flask import request, make_response, session
 from http import HTTPStatus
 from werkzeug.datastructures import ImmutableMultiDict
 from app.service.user_service import user_signup_service, search_user_service, getuser_by_id_service, user_login_service, update_user_service, update_pwd_service
@@ -52,6 +52,7 @@ def login():
         user_login_service(form)
         message = "登入成功"
         logger.info(f"{form.user_id.data} {message}")
+        session.permanent = True
         return make_response({"message": message}, HTTPStatus.OK)
     except Exception as e:
         match e.__class__.__name__:

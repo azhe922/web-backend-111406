@@ -3,6 +3,7 @@ from flask_cors import CORS
 from app_config import config
 from flasgger import Swagger
 from flask_login import LoginManager
+from mongoengine import connect
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -19,6 +20,8 @@ def create_app(config_name):
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.session_protection = "strong"
+
+    connect(host=app.config["DB_HOST"])
 
     from app.model.user import User
 
