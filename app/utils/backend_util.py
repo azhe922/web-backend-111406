@@ -39,7 +39,7 @@ def get_week(date):
 def datetime_strf(time):
     return dt.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
 
-def init_db():    
+def init_db():
     return connect(host=app.config["DB_HOST"])
 
 def close_db():

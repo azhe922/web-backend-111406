@@ -1,3 +1,4 @@
+from app.form.user_form import UserForm
 from app.model.user import User
 from app.utils.password_encryption import encrypt_password, compare_passwords
 from app.utils.backend_util import dict_to_json, datetime_strf, get_now_timestamp
@@ -21,14 +22,14 @@ def user_signup_service(userdata):
         user.save()
 
 
-def user_login_service(userdata):
-    user_id = userdata['user_id']
+def user_login_service(form: UserForm):
+    user_id = form.user_id.data
     user_check = User.objects[:1](user_id=user_id)
     if not user_check:
         raise NotFoundUseridException()
     else:
-        user = user_check.get(user_id=user_id)
-        if not compare_passwords(userdata['password'], user.password):
+        user = user_check.get()
+        if not compare_passwords(form.password.data, user.password):
             raise LoginFailedException()
 
 

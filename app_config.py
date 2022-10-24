@@ -3,6 +3,7 @@ class Config(object):
     DEBUG = True
     DEVELOPMENT = True
     DB_HOST = os.getenv('db_host')
+    SECRET_KEY = os.getenv('secret_key')
     JSON_AS_ASCII = False
 
     @staticmethod
