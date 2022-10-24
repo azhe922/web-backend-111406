@@ -4,6 +4,7 @@ from app.utils.password_encryption import encrypt_password, compare_passwords
 from app.utils.backend_util import dict_to_json, datetime_strf, get_now_timestamp
 from app.utils.backend_error import NotFoundEmailException, UserIdOrEmailAlreadyExistedException, NotFoundUseridException, LoginFailedException, PasswordIncorrectException
 from app.enums.user_role import UserRole
+from flask_login import login_user
 
 
 def user_signup_service(userdata):
@@ -31,6 +32,7 @@ def user_login_service(form: UserForm):
         user = user_check.get()
         if not compare_passwords(form.password.data, user.password):
             raise LoginFailedException()
+        login_user(user)
 
 
 def search_user_service():

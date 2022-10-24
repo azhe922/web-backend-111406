@@ -234,6 +234,20 @@ user_login = {
     }
 }
 
+user_logout = {
+    "responses": {
+        "200": {
+            "description": "使用者登出成功",
+            "examples": {
+                "message": "登出成功"
+            }
+        },
+        "500": {
+            "description": "使用者登出失敗",
+        }
+    }
+}
+
 user_search = {
     "definitions": user_list,
     "responses": {

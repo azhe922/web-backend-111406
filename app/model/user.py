@@ -1,11 +1,11 @@
 from mongoengine import Document, StringField, EmailField, FloatField, IntField, EnumField
-
+from flask_login import UserMixin
 from app.enums.user_role import UserRole
 from app.enums.gender import Gender
 import json
 
 
-class User(Document):
+class User(UserMixin, Document):
     """
     user-使用者資料
     |   欄位名稱   |       意義       | 資料型態 |
@@ -55,7 +55,8 @@ class User(Document):
     def to_json(self, *args, **kwargs):
         result = json.loads(super().to_json(*args, **kwargs))
         result.pop('password', None)
+        result.pop('eth_password', None)
+        result.pop('eth_account', None)
         result['gender'] = self.gender.description
         result['role'] = self.role.description
-        result['eth_sum'] = self.eth_sum or 0
         return result

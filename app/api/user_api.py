@@ -1,4 +1,4 @@
-from flask import request, make_response, session
+from flask import request, make_response
 from http import HTTPStatus
 from werkzeug.datastructures import ImmutableMultiDict
 from app.service.user_service import user_signup_service, search_user_service, getuser_by_id_service, user_login_service, update_user_service, update_pwd_service
@@ -6,8 +6,9 @@ import logging
 from . import api
 from app.utils.backend_error import LoginFailedException, BackendException, UserIdOrEmailAlreadyExistedException, NotFoundUseridException, PasswordIncorrectException
 from flasgger import swag_from
-from app.api.api_doc import user_signup as signup_doc, user_login as login_doc, user_search as search_doc, user_get as get_doc
+from app.api.api_doc import user_signup as signup_doc, user_login as login_doc, user_search as search_doc, user_get as get_doc, user_logout as logout_doc
 from app.form.user_form import UserForm
+from flask_login import login_required, logout_user
 
 root_path = "/user"
 logger = logging.getLogger(__name__)
@@ -66,6 +67,7 @@ def login():
 
 
 @api.route(root_path, methods=['GET'])
+@login_required
 @swag_from(search_doc)
 def search_user():
     """查詢所有使用者
@@ -139,6 +141,24 @@ def update_pwd(user_id):
         match e.__class__.__name__:
             case PasswordIncorrectException.__name__:
                 pass
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
+
+
+@api.route(f"{root_path}/logout", methods=['GET'])
+@swag_from(logout_doc)
+def logout():
+    """使用者登出    
+    """
+    try:
+        message = "登出成功"
+        logout_user()
+        return make_response({"message": message}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
             case _:
                 logger.error(str(e))
                 e = BackendException()
