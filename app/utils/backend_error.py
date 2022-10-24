@@ -30,7 +30,7 @@ class AuthNotEnoughException(BackendException):
     """
     message = "Authentication is not enough"
     body = {"message": message}
-    status = 403
+    status = 401
 
 
 class InvalidTokenProvidedException(BackendException):

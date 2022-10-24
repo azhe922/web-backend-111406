@@ -1,14 +1,16 @@
 from flask import request, make_response, session
+from flask_login import login_required, logout_user
+from flasgger import swag_from
 from http import HTTPStatus
+import logging
 from werkzeug.datastructures import ImmutableMultiDict
 from app.service.user_service import user_signup_service, search_user_service, getuser_by_id_service, user_login_service, update_user_service, update_pwd_service
-import logging
 from . import api
 from app.utils.backend_error import LoginFailedException, BackendException, UserIdOrEmailAlreadyExistedException, NotFoundUseridException, PasswordIncorrectException
-from flasgger import swag_from
 from app.api.api_doc import user_signup as signup_doc, user_login as login_doc, user_search as search_doc, user_get as get_doc, user_logout as logout_doc
 from app.form.user_form import UserForm
-from flask_login import login_required, logout_user
+from app.utils.backend_decorator import role_check
+from app.enums.user_role import UserRole
 
 root_path = "/user"
 logger = logging.getLogger(__name__)
@@ -69,6 +71,7 @@ def login():
 
 @api.route(root_path, methods=['GET'])
 @login_required
+@role_check(role=UserRole.manager.value)
 @swag_from(search_doc)
 def search_user():
     """查詢所有使用者
