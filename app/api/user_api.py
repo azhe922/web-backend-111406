@@ -95,6 +95,7 @@ def search_user():
 
 
 @api.route(f"{root_path}/<user_id>", methods=['GET'])
+@login_required
 @swag_from(get_doc)
 def getuser_by_id(user_id):
     """依使用者ID查詢用戶資料
@@ -115,6 +116,8 @@ def getuser_by_id(user_id):
 
 
 @api.route(f"{root_path}/update/<user_id>", methods=['POST'])
+@login_required
+@role_check(role=UserRole.manager.value)
 def update_user(user_id):
     data = request.get_json()
     logger.info(f"{user_id} 使用者資料更新: {data}")
@@ -135,6 +138,7 @@ def update_user(user_id):
 
 
 @api.route(f"{root_path}/update/password/<user_id>", methods=['POST'])
+@login_required
 def update_pwd(user_id):
     data = request.get_json()
     logger.info(f"{user_id} 修改密碼")
@@ -155,6 +159,7 @@ def update_pwd(user_id):
 
 
 @api.route(f"{root_path}/logout", methods=['GET'])
+@login_required
 @swag_from(logout_doc)
 def logout():
     """使用者登出    

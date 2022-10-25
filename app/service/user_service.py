@@ -1,7 +1,7 @@
 from app.form.user_form import UserForm
 from app.model.user import User
 from app.utils.password_encryption import encrypt_password, compare_passwords
-from app.utils.backend_util import dict_to_json, datetime_strf, get_now_timestamp
+from app.utils.backend_util import dict_to_json, datetime_strf_yyyymmddHHMMSS, get_now_timestamp
 from app.utils.backend_error import NotFoundEmailException, UserIdOrEmailAlreadyExistedException, NotFoundUseridException, LoginFailedException, PasswordIncorrectException
 from app.enums.user_role import UserRole
 from flask_login import login_user
@@ -39,8 +39,8 @@ def search_user_service():
     users = []
     for user in User.objects:
         user_data = user.to_json()
-        user_data['create_time'] = datetime_strf(user.create_time)
-        user_data['update_time'] = "" if user.update_time is None else datetime_strf(
+        user_data['create_time'] = datetime_strf_yyyymmddHHMMSS(user.create_time)
+        user_data['update_time'] = "" if user.update_time is None else datetime_strf_yyyymmddHHMMSS(
             user.update_time)
         users.append(user_data)
 
@@ -50,8 +50,8 @@ def search_user_service():
 def getuser_by_id_service(user_id):
     for user in User.objects[:1](user_id=user_id):
         user_data = user.to_json()
-        user_data['create_time'] = datetime_strf(user.create_time)
-        user_data['update_time'] = "" if user.update_time is None else datetime_strf(
+        user_data['create_time'] = datetime_strf_yyyymmddHHMMSS(user.create_time)
+        user_data['update_time'] = "" if user.update_time is None else datetime_strf_yyyymmddHHMMSS(
             user.update_time)
         return user_data
 

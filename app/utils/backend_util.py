@@ -36,8 +36,17 @@ def get_week(date):
         yield date
         date = datetime_delta(date, key=DeltaTimeType.days, value=1)
 
-def datetime_strf(time):
+def datetime_strf_yyyymmddHHMMSS(time):
+    """
+    將datetime格式轉換為yyyy-mm-dd HH:MM:SS字串
+    """
     return dt.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
+
+def datetime_strf_yyyymmdd(time):
+    """
+    將datetime格式轉換為yyyy-mm-dd字串
+    """
+    return dt.fromtimestamp(time).strftime('%Y-%m-%d')
 
 def init_db():
     return connect(host=app.config["DB_HOST"])
