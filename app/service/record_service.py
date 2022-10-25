@@ -32,16 +32,7 @@ from app.utils.backend_util import datetime_strf_YYYYmmddHHMMSS
 
 def search_records_by_userid(user_id):
     records = Record.objects(user_id=user_id).order_by('-create_time')
-    return __records_to_json(records)
+    return [record.to_json() for record in records]
 
 def get_count(user_id):
     return len(Record.objects(user_id=user_id))
-
-
-def __records_to_json(records):
-    result = []
-    for record in records:
-        record_data = record.to_json()
-        record_data['create_time'] = datetime_strf_YYYYmmddHHMMSS(record.create_time)
-        result.append(record_data)
-    return result
