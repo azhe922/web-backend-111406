@@ -279,23 +279,10 @@ user_get = {
     }
 }
 
-record_get = {
-    "definitions": record_model,
-    "responses": {
-        "200": {
-            "description": "查詢所有測試紀錄成功",
-            "schema": {
-                "$ref": "#/definitions/Record"
-            },
-        },
-        "500": {
-            "description": "查詢所有測試紀錄失敗",
-        }
-    }
-}
-
-
 record_search = {
+    "parameters": [
+        {"name": "user_id", "in": "Path", "type": "string", "required": "true"},
+    ],
     "definitions": record_list,
     "responses": {
         "200": {
@@ -306,6 +293,16 @@ record_search = {
         },
         "500": {
             "description": "查詢所有測試紀錄失敗",
+        }
+    }
+}
+
+    "responses": {
+        "200": {
+            "schema": {
+            },
+        },
+        "500": {
         }
     }
 }

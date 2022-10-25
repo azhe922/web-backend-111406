@@ -1,13 +1,17 @@
-# from flask import request, make_response
-# from app.service.record_service import add_record_service, search_record_service, get_standard_times_service
-# import logging
-# from . import api
-# from app.utils.backend_error import BackendException
-# from flasgger import swag_from
-# from app.api.api_doc import record_search as search_doc_record
+from flask import make_response
+from flask_login import login_required
+from flasgger import swag_from
+import logging
+from http import HTTPStatus
+from . import api
+from app.service.record_service import search_records_by_userid, get_count
+from app.utils.backend_error import BackendException
+from app.api.api_doc import record_search as search_doc, record_count as count_doc
+from app.utils.backend_decorator import role_check
+from app.enums.user_role import UserRole
 
-# root_path = "/record"
-# logger = logging.getLogger(__name__)
+root_path = "/record"
+logger = logging.getLogger(__name__)
 
 # # 新增運動測試紀錄
 
@@ -38,29 +42,29 @@
 #     response = make_response({"message": message, "data": data}, status)
 #     return response
 
-# # 查詢使用者所有測試紀錄
+# 查詢使用者所有測試紀錄
 
 
-# @api.route(f"{root_path}/<user_id>", methods=['GET'])
-# @swag_from(search_doc_record)
-# def search_record(user_id):
-#     """查詢使用者所有測試紀錄
-#     """
-#     result = []
-#     message = ""
-#     status = 200
-#     try:
-#         result = search_record_service(user_id)
-#         message = "查詢成功"
-#         logger.info(message)
-#     except Exception as e:
-#         match e.__class__.__name__:
-#             case _:
-#                 logger.error(str(e))
-#                 e = BackendException()
-#         (message, status) = e.get_response_message()
-#     response = make_response({"message": message, "data": result}, status)
-#     return response
+@api.route(f"{root_path}/<user_id>", methods=['GET'])
+@login_required
+@role_check(role=UserRole.manager.value)
+@swag_from(search_doc)
+def search_record(user_id):
+    """查詢使用者所有測試紀錄
+    """
+    try:
+        result = search_records_by_userid(user_id)
+        message = "查詢成功"
+        logger.info(message)
+        return make_response({"message": message, "data": result}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
+
 
 # # 測試結果數據分析
 

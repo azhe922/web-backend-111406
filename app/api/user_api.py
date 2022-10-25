@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 @api.route(f"{root_path}/signup", methods=['POST'])
+@login_required
+@role_check(role=UserRole.manager.value)
 @swag_from(signup_doc)
 def signup():
     """使用者註冊

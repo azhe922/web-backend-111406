@@ -1,9 +1,5 @@
-# from app.enums.training_part import TrainingPart
-# from app.enums.gender import Gender
-# from datetime import datetime
-# from app.model.record import Record
-# from app.model.standard import Standard
-# from app.utils.backend_util import dict_to_json, get_now_timestamp
+from datetime import datetime
+from app.model.record import Record
 
 
 # def add_record_service(record_data):
@@ -33,16 +29,17 @@
 #     return times
 
 
-# def search_records_by_userid(user_id):
-#     records = Record.objects(user_id=user_id).order_by('-create_time')
-#     return __records_to_json(records)
+def search_records_by_userid(user_id):
+    records = Record.objects(user_id=user_id).order_by('-create_time')
+    return __records_to_json(records)
 
 
-# def __records_to_json(records):
-#     result = []
-#     for record in records:
-#         record_data = record.to_json()
-#         record_data['create_time'] = datetime.fromtimestamp(
-#             record.create_time).strftime('%Y-%m-%d %H:%M:%S')
-#         result.append(record_data)
-#     return result
+
+def __records_to_json(records):
+    result = []
+    for record in records:
+        record_data = record.to_json()
+        record_data['create_time'] = datetime.fromtimestamp(
+            record.create_time).strftime('%Y-%m-%d %H:%M:%S')
+        result.append(record_data)
+    return result
