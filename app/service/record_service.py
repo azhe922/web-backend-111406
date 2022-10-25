@@ -33,6 +33,8 @@ def search_records_by_userid(user_id):
     records = Record.objects(user_id=user_id).order_by('-create_time')
     return __records_to_json(records)
 
+def get_count(user_id):
+    return len(Record.objects(user_id=user_id))
 
 
 def __records_to_json(records):

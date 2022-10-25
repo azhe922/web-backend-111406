@@ -297,12 +297,25 @@ record_search = {
     }
 }
 
+record_count = {
+    "parameters": [
+        {"name": "user_id", "in": "Path", "type": "string", "required": "true"},
+    ],
+    "definitions": {
+        "count": {
+            "type": "number"
+        }
+    },
     "responses": {
         "200": {
+            "description": "查詢使用者測試筆數成功",
             "schema": {
+                "id": "count",
+                "type": "number"
             },
         },
         "500": {
+            "description": "查詢使用者測試筆數失敗",
         }
     }
 }

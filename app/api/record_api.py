@@ -65,6 +65,28 @@ def search_record(user_id):
         (message, status) = e.get_response_message()
         return make_response({"message": message}, status)
 
+# 查詢使用者測試筆數
+
+
+@api.route(f"{root_path}/count/<user_id>", methods=['GET'])
+@login_required
+@role_check(role=UserRole.manager.value)
+@swag_from(count_doc)
+def get_record_count(user_id):
+    """查詢使用者測試筆數
+    """
+    try:
+        result = get_count(user_id)
+        message = "查詢使用者測試筆數成功"
+        logger.info(message)
+        return make_response({"message": message, "count": result}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
 
 # # 測試結果數據分析
 
