@@ -321,6 +321,9 @@ record_count = {
 }
 
 target_get = {
+    "parameters": [
+        {"name": "user_id", "in": "Path", "type": "string", "required": "true"},
+    ],
     "definitions": target_model,
     "responses": {
         "200": {

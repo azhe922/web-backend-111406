@@ -1,7 +1,9 @@
 from mongoengine import Document, StringField, EmbeddedDocumentListField, IntField
 import json
+from datetime import datetime
 
 from app.model.target_usertodo import UserTodo
+from app.utils.backend_util import datetime_strf_YYYYmmddHHMMSS, datetime_strf_YYYYmmdd
 
 
 class Target(Document):
@@ -23,4 +25,10 @@ class Target(Document):
     create_time = IntField()
 
     def to_json(self, *args, **kwargs):
-        return json.loads(super().to_json(*args, **kwargs))
+        result = json.loads(super().to_json(*args, **kwargs))
+        result['create_time'] = datetime_strf_YYYYmmddHHMMSS(self.create_time)
+        start_date = datetime.strptime(self.start_date, '%Y%m%d').timestamp()
+        end_date = datetime.strptime(self.end_date, '%Y%m%d').timestamp()
+        result['start_date'] = datetime_strf_YYYYmmdd(start_date)
+        result['end_date'] = datetime_strf_YYYYmmdd(end_date)
+        return result
