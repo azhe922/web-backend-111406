@@ -1,6 +1,6 @@
 from datetime import datetime
 from app.model.record import Record
-from app.utils.backend_util import datetime_strf_yyyymmddHHMMSS
+from app.utils.backend_util import datetime_strf_YYYYmmddHHMMSS
 
 
 # def add_record_service(record_data):
@@ -42,6 +42,6 @@ def __records_to_json(records):
     result = []
     for record in records:
         record_data = record.to_json()
-        record_data['create_time'] = datetime_strf_yyyymmddHHMMSS(record.create_time)
+        record_data['create_time'] = datetime_strf_YYYYmmddHHMMSS(record.create_time)
         result.append(record_data)
     return result
