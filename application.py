@@ -16,4 +16,4 @@ with open(file="logconfig.yaml", mode='r', encoding="utf-8") as file:
     logging.config.dictConfig(config=logging_yaml)
 
 if __name__ == '__main__':
-    app.run(threaded=True)
+    app.run(threaded=True, ssl_context=('ssl/server.crt', 'ssl/server.key'))

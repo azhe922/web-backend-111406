@@ -10,7 +10,7 @@
 ## 專案設定
 
 1. 啟動CMD or Terminal並切換至專案根目錄
-2. 分別輸入以下指令
+2. 分別輸入以下指令來建立python虛擬環境
 
 (in Windows CMD)
 
@@ -27,12 +27,26 @@ source .venv/bin/activate
 ```
 
 3. 接著輸入`pip install -r requirements.txt`以下載所需套件
-4. 新增`.env`檔案並設定以下變數(secret_key可利用python指令`import os; os.urandom(16).hex()`來產生)
+4. 新增`.env`檔案並設定以下變數（secret_key可利用python指令`import os; os.urandom(16).hex()`來產生）
 
 ```
 db_host = "mongodb+srv://backend:mtB5i2RUuWuSL2CK@cluster0.ftra1.mongodb.net/ntubapp"
 flask_config = "development"  #正式環境請設定為"production"
 secret_key = "add your secret key"
+```
+
+5. 以系統管理員身分開始終端機並輸入指令讓作業系統信任憑證（需安裝git）
+
+(in Windows CMD)
+
+```
+certutil -addstore -f "ROOT" ssl/server.crt
+```
+
+(in MacOS)
+
+```
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ssl/server.crt
 ```
 
 ## 專案啟動
