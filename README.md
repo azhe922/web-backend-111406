@@ -35,20 +35,6 @@ flask_config = "development"  #正式環境請設定為"production"
 secret_key = "add your secret key"
 ```
 
-5. 以系統管理員身分開始終端機並輸入指令讓作業系統信任憑證（需安裝git）
-
-(in Windows CMD)
-
-```
-certutil -addstore -f "ROOT" ssl/server.crt
-```
-
-(in MacOS)
-
-```
-sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ssl/server.crt
-```
-
 ## 專案啟動
 
 - CMD、Terminal
