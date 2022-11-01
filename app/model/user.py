@@ -4,7 +4,7 @@ from datetime import datetime
 from app.enums.user_role import UserRole
 from app.enums.gender import Gender
 import json
-from app.utils.backend_util import datetime_strf_YYYYmmddHHMMSS, datetime_strf_YYYYmmdd
+from app.utils.backend_util import datetime_strf_YYYYmmddHHMMSS, datetime_YYYYmmdd_to_YYYY_mm_dd
 
 
 class User(UserMixin, Document):
@@ -62,6 +62,5 @@ class User(UserMixin, Document):
         result['gender'] = self.gender.description
         result['role'] = self.role.description
         result['create_time'] = datetime_strf_YYYYmmddHHMMSS(self.create_time)
-        birthday = datetime.strptime(self.birthday, '%Y%m%d').timestamp()
-        result['birthday'] = datetime_strf_YYYYmmdd(birthday)
+        result['birthday'] = datetime_YYYYmmdd_to_YYYY_mm_dd(self.birthday)
         return result

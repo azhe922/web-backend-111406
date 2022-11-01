@@ -84,6 +84,7 @@ def search_user():
         message = "查詢成功"
         return make_response({"message": message, "data": result}, HTTPStatus.OK)
     except Exception as e:
+        e.with_traceback()
         match e.__class__.__name__:
             case _:
                 logger.error(str(e))
@@ -96,6 +97,7 @@ def search_user():
 
 @api.route(f"{root_path}/<user_id>", methods=['GET'])
 @login_required
+@role_check(role=UserRole.manager.value)
 @swag_from(get_doc)
 def getuser_by_id(user_id):
     """依使用者ID查詢用戶資料
@@ -137,25 +139,25 @@ def update_user(user_id):
 # 修改密碼
 
 
-@api.route(f"{root_path}/update/password/<user_id>", methods=['POST'])
-@login_required
-def update_pwd(user_id):
-    data = request.get_json()
-    logger.info(f"{user_id} 修改密碼")
-    try:
-        update_pwd_service(data, user_id)
-        message = "更新成功"
-        logger.info(message)
-        return make_response({"message": message}, HTTPStatus.OK)
-    except Exception as e:
-        match e.__class__.__name__:
-            case PasswordIncorrectException.__name__:
-                pass
-            case _:
-                logger.error(str(e))
-                e = BackendException()
-        (message, status) = e.get_response_message()
-        return make_response({"message": message}, status)
+# @api.route(f"{root_path}/update/password/<user_id>", methods=['POST'])
+# @login_required
+# def update_pwd(user_id):
+#     data = request.get_json()
+#     logger.info(f"{user_id} 修改密碼")
+#     try:
+#         update_pwd_service(data, user_id)
+#         message = "更新成功"
+#         logger.info(message)
+#         return make_response({"message": message}, HTTPStatus.OK)
+#     except Exception as e:
+#         match e.__class__.__name__:
+#             case PasswordIncorrectException.__name__:
+#                 pass
+#             case _:
+#                 logger.error(str(e))
+#                 e = BackendException()
+#         (message, status) = e.get_response_message()
+#         return make_response({"message": message}, status)
 
 
 @api.route(f"{root_path}/logout", methods=['GET'])

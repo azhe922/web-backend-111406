@@ -49,7 +49,6 @@ def search_user_service():
 def getuser_by_id_service(user_id):
     for user in User.objects[:1](user_id=user_id):
         user_data = user.to_json()
-        user_data['create_time'] = datetime_strf_YYYYmmddHHMMSS(user.create_time)
         user_data['update_time'] = "" if user.update_time is None else datetime_strf_YYYYmmddHHMMSS(
             user.update_time)
         return user_data

@@ -56,3 +56,12 @@ def close_db():
 
 def get_now_timestamp():
     return int(time.time())
+
+def datetime_YYYYmmdd_to_YYYY_mm_dd(time):
+    """
+    將yyyymmdd轉換為yyyy-mm-dd字串
+    """
+    return dt.strptime(time, '%Y%m%d').strftime('%Y-%m-%d')
+
+def datetime_YYYYmmdd_to_timestamp(time):
+    return dt.strptime(time, '%Y%m%d').timestamp()
