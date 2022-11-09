@@ -7,8 +7,8 @@ class Config(object):
     SECRET_KEY = os.getenv('secret_key')
     JSON_AS_ASCII = False
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=10)
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = 'None'
+    # SESSION_COOKIE_SECURE = True
+    # SESSION_COOKIE_SAMESITE = 'None'
 
     @staticmethod
     def init_app(app):

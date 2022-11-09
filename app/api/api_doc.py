@@ -190,6 +190,30 @@ target_model = \
         }
     }
 
+logrecord_model = \
+    {
+        "LogRecord": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "request_url": {
+                    "type": "string"
+                },
+                "action_time": {
+                    "type": "string"
+                },
+            }
+        }
+    }
+
 
 user_signup = {
     "parameters": [
@@ -334,6 +358,26 @@ target_get = {
         },
         "500": {
             "description": "查詢訓練計劃表失敗",
+        }
+    }
+}
+
+log_search = {
+    "parameters": [
+        {"name": "user_id", "in": "Query", "type": "string"},
+        {"name": "start", "in": "Query", "type": "string"},
+        {"name": "end", "in": "Query", "type": "string"},
+    ],
+    "definitions": logrecord_model,
+    "responses": {
+        "200": {
+            "description": "查詢Log成功",
+            "schema": {
+                "$ref": "#/definitions/LogRecord"
+            },
+        },
+        "500": {
+            "description": "查詢Log失敗",
         }
     }
 }
