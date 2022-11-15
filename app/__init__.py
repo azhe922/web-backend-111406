@@ -12,7 +12,7 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     CORS(app, resources={r"/api/*": {"origins": ["http://127.0.0.1:3000",
-         "http://localhost:3000", "http://140.131.114.165"]}}, supports_credentials=True)
+         "http://localhost:3000", "https://frontend-111406.onrender.com"]}}, supports_credentials=True)
 
     from app.api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
