@@ -1,6 +1,7 @@
-from signal import default_int_handler
 from mongoengine import EmbeddedDocument, StringField, ListField, BooleanField
 import json
+from datetime import datetime
+from app.utils.backend_util import datetime_strf_YYYYmmdd
 
 
 class UserTodo(EmbeddedDocument):
@@ -43,4 +44,7 @@ class UserTodo(EmbeddedDocument):
     }], max_length=5)
 
     def to_json(self, *args, **kwargs):
-        return json.loads(super().to_json(*args, **kwargs))
+        result = json.loads(super().to_json(*args, **kwargs))
+        target_date = datetime.strptime(self.target_date, '%Y%m%d').timestamp()
+        result['target_date'] = datetime_strf_YYYYmmdd(target_date)
+        return result
