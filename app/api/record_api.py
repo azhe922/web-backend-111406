@@ -4,7 +4,7 @@ from flasgger import swag_from
 import logging
 from http import HTTPStatus
 from . import api
-from app.service.record_service import search_records_by_userid, get_count
+from app.service.record_service import search_records_by_userid, get_count, get_quadriceps_means
 from app.utils.backend_error import BackendException
 from app.api.api_doc import record_search as search_doc, record_count as count_doc
 from app.utils.backend_decorator import role_check
@@ -109,13 +109,23 @@ def get_record_count(user_id):
 #         test_result = "正常"
 #     else:
 #         test_result = "待加強"
+# 查詢股四頭肌統計平均數
 
-#     result = {
-#         "pr": pr,
-#         "test_result": test_result
-#     }
-#     if difference > -100:
-#         has_record = True
-#         result["difference"] = difference
-#     logger.info("分析成功")
-#     return (result, has_record)
+@api.route(f"{root_path}/quadriceps/means", methods=['GET'])
+@login_required
+@role_check(role=UserRole.manager.value)
+def quadriceps_means():
+    """查詢下肢統計平均數
+    """
+    try:
+        result = get_quadriceps_means()
+        message = "查詢下肢統計平均數成功"
+        logger.info(message)
+        return make_response({"message": message, "means": result}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
