@@ -3,11 +3,11 @@ from flask_login import login_required
 from flasgger import swag_from
 import logging
 from http import HTTPStatus
-from app.service.target_service import get_target_service
+from app.service.target_service import get_target_service, get_newmission_user_ids_service, get_notcomplete_user_ids_service
 from app.utils.backend_error import BackendException
 from . import api
 from app.api.api_doc import target_get as get_doc
-from app.utils.backend_decorator import role_check
+from app.utils.backend_decorator import role_check, fcm_check
 from app.enums.user_role import UserRole
 
 root_path = "/target"
@@ -47,6 +47,44 @@ def get_target(user_id):
     try:
         result = get_target_service(user_id)
         message = "查詢訓練計劃表成功"
+        logger.info(message)
+        return make_response({"message": message, "data": result}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
+
+
+@api.route(f"{root_path}/get/newmission", methods=['GET'])
+@fcm_check
+def get_newmission_user_ids():
+    """查詢今日有新任務之使用者
+    """
+    try:
+        result = get_newmission_user_ids_service()
+        message = "查詢今日有新任務之使用者成功"
+        logger.info(message)
+        return make_response({"message": message, "data": result}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
+
+
+@api.route(f"{root_path}/get/notcomplete", methods=['GET'])
+@fcm_check
+def get_notcomplete_user_ids():
+    """查詢有未完成任務之使用者
+    """
+    try:
+        result = get_notcomplete_user_ids_service()
+        message = "查詢有未完成任務之使用者成功"
         logger.info(message)
         return make_response({"message": message, "data": result}, HTTPStatus.OK)
     except Exception as e:
