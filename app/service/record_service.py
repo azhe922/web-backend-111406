@@ -4,18 +4,33 @@ from app.enums.training_part import TrainingPart
 from datetime import date, datetime as dt
 from statistics import fmean
 
+def search_records_by_userid(user_id):
+    records = Record.objects(user_id=user_id).order_by('-create_time')
+    return [record.to_json() for record in records]
 
-# def add_record_service(record_data):
-#     record_data['create_time'] = get_now_timestamp()
-#     record_json = dict_to_json(record_data)
-#     record = Record().from_json(record_json)
-#     record.save()
+def get_count(user_id):
+    return len(Record.objects(user_id=user_id))
 
+def get_biceps_means():
+    biceps_records = Record.objects(part=TrainingPart.biceps).aggregate(*[
+        {
+            '$group': {
+                '_id': "$user_id",
+                'times': { '$avg': '$times' }
+            }
+        }, {
+                '$lookup': {
+                'from': User._get_collection_name(),
+                'localField': '_id',
+                'foreignField': 'user_id',
+                'as': 'relation'}
+        }
+    ])
+    biceps_results = __format_result(biceps_records)
+    statistics_results = []
+    __append_statistics(biceps_results, statistics_results)
+    return statistics_results
 
-# def get_record_before_last_target(user_id, target_create_time, part):
-#     record = Record.objects(user_id=user_id, part=part, create_time__lt=target_create_time).order_by(
-#         '-create_time').first()
-#     return record.to_json()
 
 def get_quadriceps_means():    
     quadriceps_records = Record.objects(part=TrainingPart.quadriceps).aggregate(*[
