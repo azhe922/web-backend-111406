@@ -31,7 +31,8 @@ class Record(Document):
 
     def to_json(self, *args, **kwargs):
         result = json.loads(super().to_json(*args, **kwargs))
-        result['part'] = self.part.description
+        result['part'] = self.part.value
+        result['part_name'] = self.part.description
         result['create_time'] = datetime_strf_YYYYmmddHHMMSS(self.create_time)
         return result
 
