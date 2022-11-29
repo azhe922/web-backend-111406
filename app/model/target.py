@@ -31,4 +31,6 @@ class Target(Document):
         end_date = datetime.strptime(self.end_date, '%Y%m%d').timestamp()
         result['start_date'] = datetime_strf_YYYYmmdd(start_date)
         result['end_date'] = datetime_strf_YYYYmmdd(end_date)
+        user_todos = self.user_todos.copy()        
+        result['user_todos'] = list(map(lambda x: x.to_json(), user_todos))
         return result
