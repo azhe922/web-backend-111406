@@ -4,9 +4,9 @@ from flasgger import swag_from
 from http import HTTPStatus
 import logging
 from werkzeug.datastructures import ImmutableMultiDict
-from app.service.user_service import user_signup_service, search_user_service, getuser_by_id_service, user_login_service, update_user_service, update_pwd_service
+from app.service.user_service import user_signup_service, search_user_service, getuser_by_id_service, user_login_service, update_user_service
 from . import api
-from app.utils.backend_error import LoginFailedException, BackendException, UserIdOrEmailAlreadyExistedException, NotFoundUseridException, PasswordIncorrectException
+from app.utils.backend_error import LoginFailedException, BackendException, UserIdOrEmailAlreadyExistedException, NotFoundUseridException
 from app.api.api_doc import user_signup as signup_doc, user_login as login_doc, user_search as search_doc, user_get as get_doc, user_logout as logout_doc
 from app.form.user_form import UserForm
 from app.utils.backend_decorator import role_check

@@ -1,6 +1,5 @@
-from mongoengine import Document, StringField, EmailField, FloatField, IntField, EnumField
+from mongoengine import Document, StringField, EmailField, FloatField, IntField, EnumField, DictField
 from flask_login import UserMixin
-from datetime import datetime
 from app.enums.user_role import UserRole
 from app.enums.gender import Gender
 import json
@@ -46,12 +45,12 @@ class User(UserMixin, Document):
     eth_password = StringField(max_length=100)
     eth_sum = IntField(min_value=0)
     institution = StringField()
-    other_detail = StringField()
+    other_detail = DictField()
     """ {
-        "isHadHypertension": boolean,
-        "isHadHyperglycemia": boolean,
-        "isHadHyperlipidemia": boolean,
-        "isHadExerciseHabits": boolean
+        "hasHypertension": boolean,
+        "hasHyperglycemia": boolean,
+        "hasHyperlipidemia": boolean,
+        "hasExerciseHabits": boolean
         }"""
 
     def to_json(self, *args, **kwargs):
@@ -63,4 +62,5 @@ class User(UserMixin, Document):
         result['role'] = self.role.description
         result['create_time'] = datetime_strf_YYYYmmddHHMMSS(self.create_time)
         result['birthday'] = datetime_YYYYmmdd_to_YYYY_mm_dd(self.birthday)
+        result['other_detail'] = {k: '有' if v else '無' for k, v in self.other_detail.items()}
         return result
