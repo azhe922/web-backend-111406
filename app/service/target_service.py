@@ -1,6 +1,7 @@
 from app.model.target import Target
 from app.utils.backend_util import get_week, dict_to_json
 from app.utils.rsa_util import encrypt
+from app.model.user_loginrecord import UserLoginRecord
 from datetime import datetime
 
 
@@ -8,24 +9,34 @@ def get_target_service(user_id):
     targets = Target.objects(user_id=user_id)
     return [target.to_json() for target in targets]
 
-def get_newmission_user_ids_service():
+def get_newmission_tokens_service():
     now = datetime.now()
     today = now.strftime('%Y%m%d')
     targets = Target.objects(end_date__gt=today)
-    user_ids = []
     if targets:
+        tokens = []
+        user_ids = []
         [__add_todo_is_notcomplete([today], target, user_ids) for target in targets]
-        return __convert_to_bytes_and_encrypt(user_ids).decode()
+        __get_tokens(user_ids, tokens)
+        return __convert_to_bytes_and_encrypt(tokens).decode()
 
-def get_notcomplete_user_ids_service():
+def get_notcomplete_tokens_service():
     now = datetime.now()
     today = now.strftime('%Y%m%d')
     targets = Target.objects(end_date__gt=today)
-    user_ids = []
     if targets:
+        tokens = []
+        user_ids = []
         this_week_days = [d.strftime('%Y%m%d') for d in get_week(now) if d < now]
         [__add_todo_is_notcomplete(this_week_days, target, user_ids) for target in targets]
-        return __convert_to_bytes_and_encrypt(user_ids).decode()
+        __get_tokens(user_ids, tokens)
+        return __convert_to_bytes_and_encrypt(tokens).decode()
+
+def __get_tokens(user_ids, tokens):
+    for user_id in user_ids:
+        loginrecord = UserLoginRecord.objects(user_id=user_id).get()
+        if loginrecord.registration_token:
+            tokens.append(loginrecord.registration_token)
 
 def __convert_to_bytes_and_encrypt(user_ids):
     user_ids_bytes = dict_to_json(user_ids).encode('utf-8')

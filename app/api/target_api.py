@@ -3,7 +3,7 @@ from flask_login import login_required
 from flasgger import swag_from
 import logging
 from http import HTTPStatus
-from app.service.target_service import get_target_service, get_newmission_user_ids_service, get_notcomplete_user_ids_service
+from app.service.target_service import get_target_service, get_newmission_tokens_service, get_notcomplete_tokens_service
 from app.utils.backend_error import BackendException
 from . import api
 from app.api.api_doc import target_get as get_doc
@@ -60,12 +60,12 @@ def get_target(user_id):
 
 @api.route(f"{root_path}/get/newmission", methods=['GET'])
 @fcm_check
-def get_newmission_user_ids():
-    """查詢今日有新任務之使用者
+def get_newmission_token():
+    """查詢今日有新任務之使用者token
     """
     try:
-        result = get_newmission_user_ids_service()
-        message = "查詢今日有新任務之使用者成功"
+        result = get_newmission_tokens_service()
+        message = "查詢今日有新任務之使用者token成功"
         logger.info(message)
         return make_response({"message": message, "data": result}, HTTPStatus.OK)
     except Exception as e:
@@ -79,12 +79,12 @@ def get_newmission_user_ids():
 
 @api.route(f"{root_path}/get/notcomplete", methods=['GET'])
 @fcm_check
-def get_notcomplete_user_ids():
-    """查詢有未完成任務之使用者
+def get_notcomplete_token():
+    """查詢有未完成任務之使用者token
     """
     try:
-        result = get_notcomplete_user_ids_service()
-        message = "查詢有未完成任務之使用者成功"
+        result = get_notcomplete_tokens_service()
+        message = "查詢有未完成任務之使用者token成功"
         logger.info(message)
         return make_response({"message": message, "data": result}, HTTPStatus.OK)
     except Exception as e:
