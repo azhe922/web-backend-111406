@@ -4,7 +4,7 @@ from flasgger import swag_from
 import logging
 from http import HTTPStatus
 from . import api
-from app.service.record_service import search_records_by_userid, get_count, get_biceps_means, get_quadriceps_means
+from app.service.record_service import search_records_by_userid, get_count, get_biceps_means, get_quadriceps_means, search_records_for_chart_by_userid
 from app.utils.backend_error import BackendException
 from app.api.api_doc import record_search as search_doc, record_count as count_doc
 from app.utils.backend_decorator import role_check
@@ -20,11 +20,34 @@ logger = logging.getLogger(__name__)
 @login_required
 @role_check(role=UserRole.manager.value)
 @swag_from(search_doc)
-def search_record(user_id):
+def search_records(user_id):
     """查詢使用者所有測試紀錄
     """
     try:
         result = search_records_by_userid(user_id)
+        message = "查詢成功"
+        logger.info(message)
+        return make_response({"message": message, "data": result}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
+
+# 查詢使用者所有測試紀錄 for chart
+
+
+@api.route(f"{root_path}/chart/<user_id>", methods=['GET'])
+@login_required
+@role_check(role=UserRole.manager.value)
+@swag_from(search_doc)
+def search_records_for_chart(user_id):
+    """查詢使用者所有測試紀錄
+    """
+    try:
+        result = search_records_for_chart_by_userid(user_id)
         message = "查詢成功"
         logger.info(message)
         return make_response({"message": message, "data": result}, HTTPStatus.OK)

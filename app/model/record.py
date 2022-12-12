@@ -34,5 +34,15 @@ class Record(Document):
         result['part'] = self.part.value
         result['part_name'] = self.part.description
         result['create_time'] = datetime_strf_YYYYmmddHHMMSS(self.create_time)
+        result.pop('angles')
+        return result
+
+    def to_chart_data(self):
+        result = {
+            'part': self.part.value,
+            'part_name': self.part.description,
+            'times': self.times,
+            'create_time': datetime_strf_YYYYmmddHHMMSS(self.create_time)
+        }
         return result
 

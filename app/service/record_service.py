@@ -8,6 +8,10 @@ def search_records_by_userid(user_id):
     records = Record.objects(user_id=user_id).order_by('-create_time')
     return [record.to_json() for record in records]
 
+def search_records_for_chart_by_userid(user_id):
+    records = Record.objects(user_id=user_id)[:20].order_by('-create_time')
+    return [record.to_chart_data() for record in records]
+
 def get_count(user_id):
     return len(Record.objects(user_id=user_id))
 
