@@ -63,6 +63,7 @@ def __update_default_target(user_id, data):
     if default_target:
         default_target = default_target.get()
         default_target.target_times = data['target_times']
+        default_target.valid = True
         default_target.save()
     else:
         DefaultTarget(user_id=user_id, target_times=data['target_times']).save()
