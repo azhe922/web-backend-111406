@@ -3,7 +3,7 @@ from flask_login import login_required
 from flasgger import swag_from
 import logging
 from http import HTTPStatus
-from app.service.target_service import get_target_service, get_newmission_tokens_service, get_notcomplete_tokens_service
+from app.service.target_service import get_target_service, get_newmission_tokens_service, get_notcomplete_tokens_service, search_userids_service
 from app.utils.backend_error import BackendException
 from . import api
 from app.api.api_doc import target_get as get_doc
@@ -85,6 +85,28 @@ def get_notcomplete_token():
     try:
         result = get_notcomplete_tokens_service()
         message = "查詢有未完成任務之使用者token成功"
+        logger.info(message)
+        return make_response({"message": message, "data": result}, HTTPStatus.OK)
+    except Exception as e:
+        match e.__class__.__name__:
+            case _:
+                logger.error(str(e))
+                e = BackendException()
+        (message, status) = e.get_response_message()
+        return make_response({"message": message}, status)
+
+# 查詢既有訓練表之名單
+
+
+@api.route(f"{root_path}/search/user_ids", methods=['GET'])
+@login_required
+@role_check(role=UserRole.manager.value)
+def search_userids():
+    """查詢既有訓練表之名單
+    """
+    try:
+        result = search_userids_service()
+        message = "查詢成功"
         logger.info(message)
         return make_response({"message": message, "data": result}, HTTPStatus.OK)
     except Exception as e:

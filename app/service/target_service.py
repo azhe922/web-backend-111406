@@ -32,6 +32,9 @@ def get_notcomplete_tokens_service():
         __get_tokens(user_ids, tokens)
         return __convert_to_bytes_and_encrypt(tokens).decode()
 
+def search_userids_service():
+    return sorted(list({target.user_id for target in Target.objects.only('user_id')}))
+
 def __get_tokens(user_ids, tokens):
     for user_id in user_ids:
         loginrecord = UserLoginRecord.objects(user_id=user_id).get()
