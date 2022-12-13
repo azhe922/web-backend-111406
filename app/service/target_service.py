@@ -5,9 +5,16 @@ from app.model.user_loginrecord import UserLoginRecord
 from datetime import datetime
 
 
-def get_target_service(user_id):
-    targets = Target.objects(user_id=user_id)
-    return [target.to_json() for target in targets]
+def get_target_service(user_id, search_mode: str | None):
+    if search_mode == 'current':    
+        now = datetime.now()
+        today = now.strftime('%Y%m%d')
+        target = Target.objects.get(user_id=user_id, end_date__gt=today)
+        user_todos = target.user_todos
+        return [user_todo.to_json() for user_todo in user_todos]
+    else:
+        targets = Target.objects(user_id=user_id)
+        return [target.to_json() for target in targets]
 
 def get_newmission_tokens_service():
     now = datetime.now()

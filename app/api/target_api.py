@@ -1,4 +1,4 @@
-from flask import make_response
+from flask import make_response, request
 from flask_login import login_required
 from flasgger import swag_from
 import logging
@@ -45,7 +45,8 @@ def get_target(user_id):
     """查詢個人計劃表
     """
     try:
-        result = get_target_service(user_id)
+        mode = request.args.get("mode")
+        result = get_target_service(user_id, mode)
         message = "查詢訓練計劃表成功"
         logger.info(message)
         return make_response({"message": message, "data": result}, HTTPStatus.OK)
