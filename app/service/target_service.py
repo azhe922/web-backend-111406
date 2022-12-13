@@ -40,7 +40,9 @@ def get_notcomplete_tokens_service():
         return __convert_to_bytes_and_encrypt(tokens).decode()
 
 def search_userids_service():
-    return sorted(list({target.user_id for target in Target.objects.only('user_id')}))
+    now = datetime.now()
+    today = now.strftime('%Y%m%d')
+    return sorted(list({target.user_id for target in Target.objects(end_date__gt=today).only('user_id')}))
 
 def __get_tokens(user_ids, tokens):
     for user_id in user_ids:
