@@ -64,4 +64,13 @@ def datetime_YYYYmmdd_to_YYYY_mm_dd(time):
     return dt.strptime(time, '%Y%m%d').strftime('%Y-%m-%d')
 
 def datetime_YYYYmmdd_to_timestamp(time):
+    """
+    將yyyymmdd轉換為unix time
+    """
     return dt.strptime(time, '%Y%m%d').timestamp()
+
+def datetime_YYYY_mm_dd_to_YYYYmmdd(time):
+    """
+    將yyyy-mm-dd轉換為yyyymmdd字串
+    """
+    return dt.strptime(time, '%Y-%m-%d').strftime('%Y%m%d')
